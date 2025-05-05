@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script src="{% static 'AdminLTE-3.2.0/pluggins/jquery/jquery.min.js'%}"></script>
+    <meta charset="UTF-8">
+    <title>Nueva Orden de Compra</title>
+    <style>
+
+        body {
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFEBCC;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-section {
+            width: 45%;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+
+        }
+
+        .form-row label {
+            width: 120px;
+            text-align: right;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .form-row input,
+        .form-row select {
+            width: 200px;
+            font-size: 15px;
+        }
+
+        #tablaProductos {
+            border-collapse: collapse;
+            width: 100%;
+            padding: 8px;
+        }
+
+        #tablaProductos th, #tablaProductos td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #tablaProductos th {
+            background-color: #D4D4D4;
+        }
+
+        #tablaProductos tr:nth-child(even) {
+            background-color: #ECECEC;
+        }
+
+        #tablaProductos tr:nth-child(odd) {
+            background-color: #F6F6F6;
+        }
+
+        #tablaProductos tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #tablaProductos th:nth-child(1),
+        #tablaProductos td:nth-child(1) {
+            width: 50%;
+        }
+
+        #tablaProductos th:nth-child(2),
+        #tablaProductos td:nth-child(2),
+        #tablaProductos th:nth-child(3),
+        #tablaProductos td:nth-child(3) {
+            width: 25%;
+        }
+
+        #total {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #totalLabel {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Nueva Orden de Compra</h1>
+    <div class="container">
+        <hr style="border-top: 5px solid #ccc; margin: 20px 0;">
+        <div class="form-section">
+            <div class="form-row">
+                <label for="num_compra">Nº de Factura:</label>
+                <input type="text" id="num_compra" name="num_compra" value="{{ numero_compra }}" readonly>
+            </div>
+            <div class="form-row">
+                <label for="proveedores">Proveedor:</label>
+                <select id="proveedores" onchange="cargarBotellas()">
+                    <option value="">Selecciona un proveedor</option>
+                    {% for proveedor in proveedores %}
+                        <option value="{{ proveedor.0 }}">{{ proveedor.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="proveedor_id">Código del proveedor:</label>
+                <input type="text" id="proveedor_id" readonly>
+            </div>
+            <div class="form-row">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" readonly>
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="form-row">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fechaInput" name="fecha" value="{{ fecha_actual }}">
+            </div>
+            <div class="form-row">
+                <label for="producto">Producto:</label>
+                <select id="producto" name="producto">
+                    <option value="">Selecciona un producto</option>
+                    {% for botella in botellas_del_proveedor %}
+                        <option value="{{ botella.0 }}" data-precio="{{ botella.2 }}">{{ botella.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="precio">Precio:</label>
+                <input type="text" id="precio" name="precio" readonly>
+            </div>
+            <div class="form-row">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" name="cantidad" min="1">
+            </div>
+        </div>
+        <hr style="border-top: 5px solid #ccc; margin: 20px 0;">
+    </div>
+    <div class="form-section">
+
+        <table id="tablaProductos">
+            <thead>
+                <h3>Productos agregados:</h3>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+            </tbody>
+        </table>
+
+        <div class="form-row form-row--buttons">
+            <label id="totalLabel" for="total">Total:</label>
+            <span id="total">0</span>
+            <button onclick="agregarProducto()">Agregar producto</button>
+        </div>
+    </div>
+
+    <div class="boton-registrar">
+        <form id="registrarForm" method="post" action="{% url 'compras:registrar_compra' %}">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="num_compra" value="{{ numero_compra }}">
+                <input type="hidden" name="proveedor_id" id="proveedor_id" value="">
+                <input type="hidden" name="fecha" value="{{ fecha_actual }}">
+                <input type="hidden" name="total" id="total_compra" value="0">
+                <input type="hidden" name="tabla_productos[]" id="tabla_productos" value="">
+                <button type="submit" onclick="registrarCompra()">Emitir Compra</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var productosAgregados = [];
+
+        function cargarBotellas() {
+            var proveedorSeleccionado = document.getElementById('proveedores').value;
+        
+            if (proveedorSeleccionado) {
+                fetch(`/compras/obtener_proveedor/${proveedorSeleccionado}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Hubo un problema al obtener los datos del proveedor');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const selectProductos = document.getElementById('producto');
+                        selectProductos.innerHTML = '<option value="">Selecciona un producto</option>'; // Agrega esta línea para poner la opción por defecto
+        
+                        data.botellas_del_proveedor.forEach(botella => {
+                            const option = document.createElement('option');
+                            option.value = botella[0];
+                            option.textContent = botella[1];
+                            option.setAttribute('data-precio', botella[2]);
+                            selectProductos.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                document.getElementById('producto').innerHTML = '<option value="">Selecciona un producto</option>';
+            }
+        }
+        
+
+        function registrarCompra() {
+            var num_compra = document.getElementById('num_compra').value;
+            var proveedor_id = document.getElementById('proveedor_id').value;
+            var fecha = document.getElementById('fechaInput').value.split('/').reverse().join('-');
+            var total_compra = document.getElementById('total_compra').value;
+
+            var formData = new FormData();
+            formData.append('num_compra', num_compra);
+            formData.append('proveedor_id', proveedor_id);
+            formData.append('fecha', fecha);
+            formData.append('total', total_compra);
+
+            productosAgregados.forEach(producto => {
+                formData.append('tabla_productos[]', producto.join(','));
+            });
+
+            fetch('{% url "compras:registrar_compra" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '{% url "compras:registrar_compra" %}';
+                } else {
+                    console.error('Error al registrar la compra');
+                    // Manejar el error aquí si es necesario
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Manejar el error aquí si es necesario
+            });
+        }
+               
+        
+        function actualizarCampos() {
+            var seleccionado = document.getElementById('proveedores').value;
+            var proveedorIdInput = document.getElementById('proveedor_id');
+    
+            {% for proveedor in proveedores %}
+                if ('{{ proveedor.0 }}' === seleccionado) {
+                    proveedorIdInput.value = '{{ proveedor.0 }}';
+                    document.getElementById('direccion').value = '{{ proveedor.4 }}';
+                }
+            {% endfor %}
+        }
+
+        // Obtener el elemento por su ID
+        var fechaInput = document.getElementById('fechaInput');
+
+        // Verificar si el elemento existe antes de usarlo
+        if (fechaInput) {
+            // Hacer algo con el elemento, como obtener su valor
+            var fechaSeleccionada = fechaInput.value;
+            console.log('Fecha seleccionada:', fechaSeleccionada);
+        } else {
+            console.error('El elemento con el ID "fechaInput" no existe.');
+        }
+        document.getElementById('proveedores').addEventListener('change', actualizarCampos);
+        actualizarCampos();
+
+        document.getElementById('producto').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var precio = selectedOption.getAttribute('data-precio');
+            document.getElementById('precio').value = precio;
+        });
+
+        function calcularTotal() {
+            var tabla = document.getElementById('tablaProductos');
+            var filas = tabla.getElementsByTagName('tr');
+            var total = 0;
+        
+            for (var i = 1; i < filas.length; i++) {
+                var celdaPrecio = filas[i].getElementsByTagName('td')[1];
+                var celdaCantidad = filas[i].getElementsByTagName('td')[2];
+        
+                var precio = parseFloat(celdaPrecio.innerHTML);
+                var cantidad = parseFloat(celdaCantidad.innerHTML);
+        
+                total += precio * cantidad;
+            }
+        
+            document.getElementById('total').innerHTML = total.toFixed(2);
+            document.getElementById('total_compra').value = total.toFixed(2);
+        }
+        
+        function agregarProducto() {
+            var productoSelect = document.getElementById('producto');
+            var selectedOption = productoSelect.options[productoSelect.selectedIndex];
+            var idBotella = selectedOption.value; // Cambiamos a obtener el ID de la botella en lugar del nombre
+            var precio = selectedOption.getAttribute('data-precio');
+            var cantidad = document.getElementById('cantidad').value;
+        
+            if (idBotella && precio && cantidad) {
+                productosAgregados.push([idBotella, precio, cantidad]);
+
+                var cuerpoTabla = document.getElementById('cuerpoTabla');
+                var nuevaFila = cuerpoTabla.insertRow();
+        
+                var celdaProducto = nuevaFila.insertCell();
+                var celdaPrecio = nuevaFila.insertCell();
+                var celdaCantidad = nuevaFila.insertCell();
+        
+                celdaProducto.innerHTML = selectedOption.textContent;
+                celdaPrecio.innerHTML = precio;
+                celdaCantidad.innerHTML = cantidad;
+
+                document.getElementById('producto').selectedIndex = 0;
+                document.getElementById('precio').value = '';
+                document.getElementById('cantidad').value = '';
+                calcularTotal();
+
+                // Ajustamos la forma en que se guarda la lista para el envío al formulario
+                var listaProductos = productosAgregados.map(producto => producto.join(',')); // Convertimos a formato ID,Precio,Cantidad
+                document.getElementById('tabla_productos').value = listaProductos.join(';'); // Se separan por ';' en lugar de ','
+            }
+        }
+
+    </script>
+    
+    
+</body>
+</html>

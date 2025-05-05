@@ -1,0 +1,103 @@
+{% extends 'sitioweb_home.html' %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #FFEBCC;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Asegura que la página ocupe al menos el alto de la ventana */
+        }
+
+        .container {
+            flex: 1; /* Hace que la sección de contenido tome el espacio restante */
+            padding-top: 20px;
+        }
+
+        footer {
+            width: 100%;
+            bottom: 0;
+            position: fixed;
+            background-color: #685747;
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Carrito de Compras</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        {% if productos_carrito %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio Unitario</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for producto, total in productos_con_total %}
+                                        <tr>
+                                            <td>{{ producto.2 }}</td>
+                                            <td>{{ producto.0 }}</td>
+                                            <td>{{ producto.1 }}</td>
+                                            <td>{{ total }}</td>
+                                            <td>
+                                                <form action="{% url 'sitioweb:eliminar_producto' producto.3 %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="{% url 'sitioweb:modificar_cantidad' producto.3 %}" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="number" name="nueva_cantidad" value="{{ producto.0 }}">
+                                                    <button type="submit" class="btn btn-primary btn-sm">Modificar</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>No hay productos en el carrito.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        {% if productos_carrito %}
+                            {% with total_carrito=0 %}
+                                {% for producto in productos_carrito %}
+                                    {% with item_total=producto.0|add:producto.1 %}
+                                        {% with total_carrito=total_carrito|add:item_total %}
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                            {% if total_carrito %}
+                                <h3 class="mb-4">Total a Pagar: {{ total_carrito }}</h3>
+                                <button onclick="window.location.href = '{% url 'sitioweb:seleccionar_tarjeta' %}'" class="btn btn-primary btn-block">Proceder al pago</button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <strong>ASORONUCAB &copy; 2023 <a href="https://adminlte.io">ASORON</a>.</strong>
+        <span>Descubre la excelencia en cada botella.</span>
+    </footer>
+{% endblock %}

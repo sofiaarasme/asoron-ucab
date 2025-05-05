@@ -1,0 +1,106 @@
+{% extends 'home.html'%}
+
+{% block body%}
+    <body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+    {% include 'header.html'%}
+
+    <div class="content-wrapper">
+        
+        <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">
+                        <i class="bi bi-journal-album mr-2" style="color: #685747;"></i> Lista de Empleados
+                    </h1>
+                </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url 'nomina:registrar_empleado' %}">Nuevo Empleado</a></li>
+                <li class="breadcrumb-item"><a href="#">Departamentos</a></li>
+                </ol>
+            </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        </div>
+        <div class = "content">
+            <div class = "container"> 
+                {% block content%}
+                <style>
+                    .espaciado {
+                        margin-bottom: 20px; /* Espaciado en la parte inferior */
+                        padding-left: 10px;  /* Espaciado en el lado izquierdo */
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                
+                    body {
+                      font-family: Arial, sans-serif;
+                  }
+                
+                  h2 {
+                      margin-bottom: 20px;
+                  }
+                
+                  table {
+                      border-collapse: collapse;
+                      width: 80%;
+                      margin-left: auto;
+                      margin-right: auto; 
+                  }
+                
+                  th, td {
+                      padding: 12px;
+                      text-align: left;
+                      border-bottom: 1px solid #ddd;
+                  }
+                
+                  tbody tr:hover {
+                      background-color: #DDDDDD;
+                  }
+                
+                  /* Estilos adicionales para mejorar la apariencia */
+                  th {
+                      background-color: #f2f2f2;
+                  }
+                  </style>
+                    <table border="1", style = espaciado>
+                        <thead>
+                            <tr>
+                                <th>Nombre Completo</th>
+                                <th>Cedula</th>
+                                <th>Telefono</th>
+                                <th>Sueldo</th>
+                                <th>Departamento</th>
+                                <th>Cargo</th>
+                                <th>Tienda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for empleado in lista_empleados %}
+                                <tr onclick="window.location='/nomina/{{ empleado.empleado_id }}';" style="cursor: pointer;">
+                                    <td>{{ empleado.empleado_primer_nombre }} {{ empleado.empleado_primer_apellido }}</td>
+                                    <td>{{ empleado.empleado_ci }}</td>                      
+                                    <td>
+                                    {% for telefono in empleado.telefonos.all %}
+                                        {{ telefono.telefono_codigo }}{{ telefono.telefono_numero }}<br>
+                                    {% endfor %}
+                                    </td>                            
+                                    <td>{{ empleado.empleado_sueldo }}</td>
+                                    <td>{{ empleado.fk_departamento.departamento_nombre }}</td>
+                                    <td>{{ empleado.empleado_cargo }}</td>
+                                    <td>{{ empleado.fk_tienda.tienda_razon_social }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html'%}
+    </div>
+    </body>
+{% endblock %}

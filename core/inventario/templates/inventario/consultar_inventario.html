@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Información del inventario</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            padding: 50px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: row; /* Cambio a dirección horizontal */
+            width: 60%; /* O ajusta el ancho según tu preferencia */
+            padding: 15px;
+            justify-content: space-evenly;
+        }
+
+        .button-agregar {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: #007bff;
+        }
+
+        .button-modificar {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: #007bff;
+        }
+
+        .button-eliminar {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: #dc3545;
+        }
+
+        .button-lista {
+            color: #000000;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: transparent;
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>Información del inventario</h1>
+    <div class="info-container">
+        <div class="info">
+            <div class="label">ID Inventario:</div>
+            <div class="value">{{ inventario.inventario_id }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Descrpción:</div>
+            <div class="value">{{ inventario.inventario_descripcion }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Cantidad disponible:</div>
+            <div class="value">{{ inventario.inventario_cantidad }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Producto:</div>
+            <div class="value">{{ inventario.fk_botella }}</div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="#" class="button-modificar">Agregar a ofertas</a>
+        {% comment %} <a href="{% url 'inventario:agregar_oferta' inventario.fk_botella %}" class="button-modificar">Agregar Oferta</a> {% endcomment %}
+        <a href="{% url 'inventario:index' %}" class="button-lista">Volver a Inventarios</a>
+    </div>
+    </div>
+
+    <script>
+    </script>
+</body>
+</html>

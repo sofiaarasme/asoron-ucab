@@ -1,0 +1,101 @@
+{% extends 'home.html' %}
+
+{% block body %}
+    <body class="hold-transition layout-top-nav">
+        <div class="wrapper">
+            {% include 'header.html' %}
+
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0">
+                                    <i class="bi bi-people-fill mr-2" style="color: #685747;"></i> Lista de Usuarios
+                                </h1>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="{% url 'usuarios:registrar_usuario' %}">Nuevo Usuario</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'usuarios:index_roles' %}">Roles</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'usuarios:index_permisos' %}">Permisos</a></li>
+                                </ol>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
+                </div>
+                <div class="content">
+                    <div class="container">
+                        {% block content %}
+                        <style>
+                            .espaciado {
+                                margin-bottom: 20px; /* Espaciado en la parte inferior */
+                                padding-left: 10px;  /* Espaciado en el lado izquierdo */
+                                margin-left: auto;
+                                margin-right: auto;
+                            }
+                        
+                            body {
+                              font-family: Arial, sans-serif;
+                          }
+                        
+                          h2 {
+                              margin-bottom: 20px;
+                          }
+                        
+                          table {
+                              border-collapse: collapse;
+                              width: 80%;
+                              margin-left: auto;
+                              margin-right: auto; 
+                          }
+                        
+                          th, td {
+                              padding: 12px;
+                              text-align: left;
+                              border-bottom: 1px solid #ddd;
+                          }
+                        
+                          tbody tr:hover {
+                              background-color: #DDDDDD;
+                          }
+                        
+                          /* Estilos adicionales para mejorar la apariencia */
+                          th {
+                              background-color: #f2f2f2;
+                          }
+                          </style>
+                            <table border="1" class="espaciado">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de Usuario</th>
+                                        <th>Contraseña</th>
+                                        <th>Empleado</th>
+                                        <!-- Agrega más encabezados según los campos de tu modelo Usuario -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for usuario in lista_usuarios %}
+                                        <tr onclick="window.location='/usuarios/{{ usuario.usuario_id }}';" style="cursor: pointer;">
+                                            <td>{{ usuario.usuario_nombre }}</td>
+                                            <td>
+                                                <span id="passwordField_{{ forloop.counter }}">{{ usuario.usuario_contrasena }}</span>
+                                            </td>
+                                            <td>{{ usuario.fk_empleado }}</td>
+                                        </tr>
+                                        <script>
+                                            const passwordField_{{ forloop.counter }} = document.getElementById('passwordField_{{ forloop.counter }}');
+                                            const password_{{ forloop.counter }} = passwordField_{{ forloop.counter }}.innerText;
+                                            passwordField_{{ forloop.counter }}.innerText = '*'.repeat(password_{{ forloop.counter }}.length);
+                                        </script>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            {% include 'footer.html' %}
+        </div>
+    </body>
+{% endblock %}

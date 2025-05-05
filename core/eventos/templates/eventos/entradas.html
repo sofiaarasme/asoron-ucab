@@ -1,0 +1,70 @@
+<body>
+    <style>
+        body {
+            background-color: #FFEBCC;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+
+        h1 {
+            background-color: #FFEBCC;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 30px;
+            color: #333;
+            font-weight: bold;
+            padding: 20px;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        input[type=text],
+        input[type=password],
+        input[type=email],
+        select {
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #3CA92B;
+            border: 0 none;
+            cursor: pointer;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 20px;
+            padding: 10px;
+        }
+
+        button:hover {
+            background-color: green;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .errorlist {
+            color: #f00;
+        }
+    </style>
+    <h1>Generar Entradas</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar cambios</button>
+        <p><a href="{% url 'eventos:index' %}">Volver a la lista de eventos</a></p>
+    </form>
+</body>

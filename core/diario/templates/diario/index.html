@@ -1,0 +1,161 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>DiarioRonero</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+        }
+        
+        header {
+            background-color: #685747;
+            padding: 5px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: -100;
+            display: flex;
+            justify-content: flex-end;
+            background-color: #685747;
+        }
+
+        nav ul li {
+            margin-left: 50px;
+            padding: 5px 10px;
+        }
+
+        nav ul li:first-child {
+            margin-left: 10px;
+            border: none;
+            border-radius: none; /* Elimina el borde del logo */
+            background: none; /* Elimina el fondo del logo */
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Estilos para los enlaces a la derecha */
+        nav ul li:nth-last-child(-n+6) a {
+            color: white;
+            font-family: Arial, sans-serif; /* Tipo de letra */
+            font-size: 22px; /* Tamaño de fuente más grande */
+        }
+
+        /* Agrega un margen derecho para el botón Carrito */
+        nav ul li:nth-last-child(1) a {
+            margin-right: 28px;
+        }
+
+        .logo-container {
+            margin-right: auto;
+            margin-left: 15px;
+        }
+
+        footer {
+            background-color: #685747;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+    
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .publicidad {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .producto {
+            width: calc(25% - 20px); /* Ancho para 4 columnas con gap de 20px */
+            background-color: #fff; /* Color de fondo opcional */
+            box-sizing: border-box;
+            border: 1px solid #ccc; /* Borde para los productos */
+            text-align: center; /* Centrar texto */
+            flex-grow: 1;
+            padding: 20px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .titulo {
+            text-align: center; /* Centrar el texto */
+            font-size: 50px; /* Tamaño de fuente más grande */
+            color: #545454; /* Color gris */
+            font-family: Arial, sans-serif; /* Tipo de fuente */
+            padding: 40px;
+        }
+
+        .container {
+            min-height: calc(100vh - 150px); /* Calcula la altura mínima del contenido */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li class="logo-container">
+                    <a href="javascript:history.back()">
+                        <img src="{% static 'images/Logo-ASORONUCAB.png' %}" alt="Logo" style="width: 300px; height: auto; margin-left: 12px;">
+                    </a>
+                </li>
+                <h1 style="margin-right: 550px; color: #EB8021; font-size: 60px; font-family: 'Kaushan Script', cursive, bold; -webkit-text-stroke: 0.00001px #fff;">Diario Ronero</h1>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenido específico de cada página -->
+    <div class="container">
+        {% block content %}
+            <div class="container">
+                <h1 class="titulo">Productos disponibles en oferta</h1>
+                <!-- Cuadros de productos -->
+                <div class="publicidad">
+                    {% for producto in productos %}
+                        <a href="#" class="producto">
+                        {% comment %} <a href="{% url 'diario:info_producto' producto.botella_id %}" class="producto"> {% endcomment %}
+                            <div>
+                                <h2 style="background-color: yellow;">{{ producto.1 }}</h2>
+
+                                <img src="{% static 'images/santa-teresa.png' %}" alt="{{ producto.1 }}" style="max-width: 40%; height: auto;">
+                                <p>Antes: <span style="text-decoration: line-through; color: red;">${{ producto.2 }}</span></p>
+                                <p>Ahora: <span style="color: green;">${{ producto.7 }}</span></p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        <strong>ASORONUCAB &copy; 2023 <a href="https://adminlte.io">ASORON</a>.</strong>
+        <span>Descubre la excelencia en cada botella.</span>
+    </footer>
+
+    <!-- Agrega tus scripts JS -->
+</body>
+</html>

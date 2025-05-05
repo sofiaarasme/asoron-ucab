@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de la compra</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            padding: 40px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .button-container {
+            display: flex;
+            width: 100%;
+            justify-content: center; /* Centra horizontalmente */
+            margin-top: 20px; /* Espacio entre los botones y el contenido anterior */
+        }
+        
+        .button-lista {
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .button-lista {
+            background-color: #007bff;;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detalle de la Compra</h1>
+    <div class="info-container">
+        <div class="info">
+            <div class="label">Número de compra:</div>
+            <div class="value">{{ compra.0 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Fecha:</div>
+            <div class="value">{{ compra.1 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Monto total:</div>
+            <div class="value">{{ compra.2 }}</div>
+        </div>
+        <!-- Detalles de la compra -->
+        {% for detalle in detalles_compra %}
+            <div class="info">
+                <div class="label">Cantidad:</div>
+                <div class="value">{{ detalle.0 }}</div>
+            </div>
+            <div class="info">
+                <div class="label">Precio unitario:</div>
+                <div class="value">{{ detalle.1 }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'compras:index' %}" class="button-lista">Regresar</a>
+    </div>
+</body>
+</html>

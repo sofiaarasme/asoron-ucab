@@ -1,0 +1,73 @@
+{% extends 'sitioweb_home.html' %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #FFEBCC;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Asegura que la página ocupe al menos el alto de la ventana */
+        }
+
+        .container {
+            flex: 1; /* Hace que la sección de contenido tome el espacio restante */
+            padding-top: 20px;
+        }
+
+        footer {
+            width: 100%;
+            bottom: 0;
+            position: fixed;
+            background-color: #685747;
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Afiliacion</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        {% if cliente.tarjetas_natural.all  %}
+                            <h2 class="mb-4">Usted ya se encuentra afiliado</h2>
+                        {% else %}
+                            <p>Usted no se encuentra afiliado</p>
+                            <a href="{% url 'sitioweb:seleccionar_tarjeta_afiliacion' %}">afiliarse</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        {% if productos_carrito %}
+                            {% with total_carrito=0 %}
+                                {% for producto in productos_carrito %}
+                                    {% with item_total=producto.0|add:producto.1 %}
+                                        {% with total_carrito=total_carrito|add:item_total %}
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                            {% if total_carrito %}
+                                <h3 class="mb-4">Total a Pagar: {{ total_carrito }}</h3>
+                                <button class="btn btn-primary btn-block">Pagar</button>
+                                <a href="{% url 'inventario:registrar_inventario' %}">Nuevo</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <strong>ASORONUCAB &copy; 2023 <a href="https://adminlte.io">ASORON</a>.</strong>
+        <span>Descubre la excelencia en cada botella.</span>
+    </footer>
+{% endblock %}

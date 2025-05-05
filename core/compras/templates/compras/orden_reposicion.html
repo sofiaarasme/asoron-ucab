@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Orden de Reposición</title>
+    <style>
+        /* Estilos para el modal */
+        .modal {
+            display: block;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: #FFEBCC;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: left;
+        }
+
+        /* Para dividir los campos */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        /* Para el botón de aceptar y cancelar */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            background-color: #ff0000; /* Rojo */
+            color: #fff;
+        }
+
+        .btn-aceptar {
+            background-color: #008000; /* Verde */
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal">
+        <div class="modal-content">
+            <h2>ORDEN DE REPOSICIÓN POR DISPONIBILIDAD MENOR A 100 UNIDADES</h2>
+            <form method="POST" action="{% url 'compras:index' %}">
+                {% csrf_token %}
+                <p>Proveedor: {{ proveedor }}</p>
+                <p>Botella ID: {{ botella_id }}</p>
+                <p>Botella Nombre: {{ botella_nombre }}</p>
+                <p>Fecha de Emisión: {{ fecha_emision }}</p>
+                <p>Descripción: {{ descripcion }}</p>
+                <label for="clave">Clave de Confirmación:</label>
+                <input type="password" id="clave" name="clave">
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-aceptar">Aceptar</button>
+                    <a href="{% url 'compras:index_sin_orden' %}" class="btn btn-cancelar">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

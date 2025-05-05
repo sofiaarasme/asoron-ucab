@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Evento</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            padding: 40px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: row; /* Alineación horizontal */
+            width: 50%;
+            justify-content: space-between; /* Distribución equitativa */
+            margin-top: 20px; /* Espacio entre los botones y el contenido anterior */
+        }
+
+        .button-modificar,
+        .button-eliminar,
+        .button-lista {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .button-modificar {
+            background-color: #007bff; /* Azul */
+        }
+
+        .button-eliminar {
+            background-color: #dc3545; /* Rojo */
+        }
+
+        .button-lista {
+            background-color: transparent;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <p>Objeto recibido: {{evento}}</p>
+    <h1>Detalles del Evento</h1>
+    <div class="info-container">
+        <div class="info">
+            <div class="label">ID:</div>
+            <div class="value">{{ evento.evento_id }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Nombre:</div>
+            <div class="value">{{ evento.evento_nombre }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Fecha de Inicio:</div>
+            <div class="value">{{ evento.evento_fecha_inicio }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Fecha de Fin:</div>
+            <div class="value">{{ evento.evento_fecha_fin }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Ubicación:</div>
+            <div class="value">{{ evento.evento_ubicacion }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Lugar:</div>
+            <div class="value">{{ evento.fk_lugar }}</div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'eventos:registrar_entrada' evento.evento_id %}" class="button-modificar">Generar Entradas</a>
+        <a href="{% url 'eventos:modificar' evento.evento_id %}" class="button-modificar">Modificar evento</a>
+        <a href="#" onclick="mostrarModal()" class="button-eliminar">Eliminar Evento</a>
+        <a href="{% url 'eventos:index' %}" class="button-lista">Volver a la lista de eventos</a>
+    </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            {% include 'eventos/eliminar.html' %}
+        </div>
+    </div>
+
+    <script>
+        function mostrarModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

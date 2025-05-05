@@ -1,0 +1,267 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de la Venta</title>
+    <script src="{% static 'libraries/jspdf.umd.min.js' %}"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            padding: 40px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .button-container {
+            display: flex;
+            width: 100%;
+            justify-content: center; /* Centra horizontalmente */
+            margin-top: 20px; /* Espacio entre los botones y el contenido anterior */
+        }
+        
+        .button-lista {
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .button-lista {
+            background-color: #007bff;;
+            color: white;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+    
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+    
+        .modal-content p {
+            margin: 5px 0;
+        }
+    
+        .modal-content p:nth-child(4) {
+            font-weight: bold;
+        }
+    
+        .modal-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+    
+        .modal-content th {
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    
+        .modal-content td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    
+        .recibo-total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detalle de la Venta</h1>
+    <div class="info-container">
+        <div class="info">
+            <div class="label">Número de factura:</div>
+            <div class="value">{{ factura.0 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Fecha:</div>
+            <div class="value">{{ factura.1 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Monto total:</div>
+            <div class="value">{{ factura.2 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Tipo de venta:</div>
+            <div class="value">
+                {% if factura.6 %}
+                    Entradas
+                {% else %}
+                    Productos
+                {% endif %}
+            </div>
+        </div>
+        <!-- Detalles de la venta -->
+        {% for detalle in detalles_venta %}
+            <div class="info">
+                <div class="label">Cantidad:</div>
+                <div class="value">{{ detalle.0 }}</div>
+            </div>
+            <div class="info">
+                <div class="label">Precio unitario:</div>
+                <div class="value">{{ detalle.1 }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="button-container">
+        <button onclick="mostrarRecibo()" class="button-lista">Ver recibo</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalRecibo" class="modal">
+        <div class="modal-content">
+            <!-- Cabecera del recibo -->
+            <div class="recibo-header">
+                <img src="{% static 'images/Logo-ASORONUCAB.png' %}" alt="Logo ASORONUCAB" style="width: 100px; height: auto">
+                <p>ASOCIACIÓN RONERA DE LA UCAB, C.A.<br>
+                CARACAS, DISTRITO CAPITAL, VENEZUELA</p>
+                <p>Fecha: {{ factura.1 }}</p>
+                <p>RECIBO N°: {{ factura.0 }}</p>
+                <!-- Información del cliente -->
+                {% if cliente_info %}
+                {% if cliente_info.0 == 'Juridico' %}
+                    <p>Razón Social: {{ cliente_info.3 }}</p>
+                    <p>RIF: {{ factura.5  }}</p>
+                    <p>Dirección Fiscal: {{ cliente_info.7 }}</p>
+                {% elif cliente_info.0 == 'Natural' %}
+                    <p>Nombre: {{ cliente_info.3 }} {{ cliente_info.5 }}</p>
+                    <p>RIF: {{ factura.4  }}</p>
+                    <p>Dirección: {{ cliente_info.7 }}</p>
+                {% endif %}
+            {% else %}
+                <p>Información del cliente no disponible</p>
+            {% endif %}
+            </div>
+
+            <!-- Detalles de la venta -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in detalles_venta %}
+                        <tr>
+                            <td>{{ detalle.4 }}</td>
+                            <td>{{ detalle.0 }}</td>
+                            <td>{{ detalle.1 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Total de la venta -->
+            <div class="recibo-total">
+                <p>Monto Total: {{ factura.2 }} Bs.f</p>
+            </div>
+
+            <div class="button-container">
+                <button onclick="cerrarModal()" class="button-lista">Cerrar</button>
+                {% comment %} <button onclick="imprimirRecibo()" class="button-lista">Imprimir</button> {% endcomment %}
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'facturacion:index' %}" class="button-lista">Regresar</a>
+    </div>
+    <script>
+
+        console.log(window.jsPDF);
+        function mostrarRecibo() {
+            var modal = document.getElementById("modalRecibo");
+            modal.style.display = "block";
+        }
+
+        function cerrarModal() {
+            var modal = document.getElementById("modalRecibo");
+            modal.style.display = "none";
+        }
+
+        function imprimirRecibo() {
+            const contenidoModal = document.getElementById("modalRecibo").innerHTML;
+        
+            if (typeof jsPDF !== "undefined") {
+                var doc = new jsPDF();
+        
+                doc.fromHTML(contenidoModal, 15, 15, {
+                    width: 170
+                });
+        
+                doc.save("recibo.pdf");
+            } else {
+                console.error("La librería jsPDF no está cargada correctamente.");
+            }
+        }
+        
+    </script>
+</body>
+</html>

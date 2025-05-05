@@ -1,0 +1,58 @@
+{% extends 'sitioweb_home.html' %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        .publicidad {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 50px;
+        }
+
+        .evento {
+            width: 100%; /* Ancho completo */
+            box-sizing: border-box;
+            border: 1px solid #ccc; /* Borde para los eventos */
+            padding: 20px; /* Espaciado interno */
+            margin-bottom: 20px; /* Margen inferior */
+        }
+
+        .evento a {
+            display: block;
+            color: #333; /* Color del texto */
+            text-decoration: none; /* Quita la subrayado de los enlaces */
+            font-size: 18px; /* Tamaño de fuente */
+            font-family: Arial, sans-serif; /* Tipo de fuente */
+            margin-bottom: 8px; /* Margen inferior entre enlaces */
+        }
+
+        .evento a.evento-nombre {
+            color: blue; /* Color azul para el evento_nombre */
+            font-size: 24px; /* Tamaño de fuente más grande para el evento_nombre */
+            font-weight: bold; /* Texto en negrita */
+            text-decoration: underline; /* Subrayado para el evento_nombre */
+        }
+
+        .titulo {
+            text-align: center; /* Centrar el texto */
+            font-size: 50px; /* Tamaño de fuente más grande */
+            color: #545454; /* Color gris */
+            font-family: Arial, sans-serif; /* Tipo de fuente */
+        }
+
+    </style>
+    <h1 class="titulo">PRÓXIMOS EVENTOS</h1>
+    <!-- Cuadros de productos -->
+    <div class="publicidad">
+        {% for evento in eventos %}
+            <div class="evento">
+                <a href="{% url 'sitioweb:info_evento' evento.evento_id %}" class="evento-nombre">{{ evento.evento_nombre }}</a>
+                <p>Fecha: {{ evento.evento_fecha_inicio }}</p>
+                <p>Ubicación: {{ evento.evento_ubicacion }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

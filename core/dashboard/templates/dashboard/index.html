@@ -1,0 +1,140 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Asoron</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.18.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body {
+            padding-top: 50px; /* Añade un espacio en la parte superior del cuerpo */
+            justify-content: center; /* Centra el contenido de la página */
+            background-color: #FFEBCC;
+        }
+        .custom-col {
+            margin-bottom: 20px; /* Añade espacio entre las columnas */
+            border: 1px solid #ddd; /* Añade borde a cada columna */
+            padding: 15px; /* Añade espacio interno dentro de cada columna */
+        }
+        .container {
+            justify-content: center; 
+            border: 3px solid #ddd; 
+            padding: 20px; 
+            background-color: white;
+        }
+        .header-container {
+            display: flex; 
+            align-items: center; 
+            margin-right: 20px;
+        }
+        .header-container img {
+            max-width: 5%;
+            height: auto;
+            margin-right: 10px; 
+        }
+        h1 {
+            font-family: 'Kavoon', cursive;
+            font-weight: bold;
+            font-size: 50px;
+            margin-left: 30px;
+            margin-right: 10px;
+            margin-bottom: 30px;
+            margin-top: 0px;
+        }
+        a.btn {
+            margin-left: 620px;
+            margin-right: 10px;
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1>Dashboard AsoRonUcab</h1>
+        <img src="{% static 'images/dashboard-icon.png' %}" style="max-width: 5%; height: auto; margin-right: 90px; margin-left: 25px;">
+        <form method="get">
+            <label for="fecha_desde">Fecha Desde:</label>
+            <input type="date" name="fecha_desde" id="fecha_desde" value="{{ fecha_desde }}" required>
+            <label for="fecha_hasta">Fecha Hasta:</label>
+            <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ fecha_hasta }}" required>
+            <button type="submit" name="filter_button">Filtrar</button>
+        </form>       
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 custom-col text-center">
+                <h2>Botella más vendida:</h2>
+                <img src="{% static 'images/botella-mas-vendida.png' %}" style="max-width: 40%; height: auto;" class="mx-auto">
+                {% if botella_mas_vendida %}
+                    <h4>{{ botella_mas_vendida.0 }}</h4>
+                {% else %}
+                    <p>No hay datos disponibles.</p>
+                {% endif %}
+            </div>
+            <div class="col-md-4 custom-col text-center">
+                <h2>Total de ventas:</h2>
+                <img src="{% static 'images/ventas-exitosas.png' %}" style="max-width: 90%; height: auto; margin-bottom: 10px;" class="mx-auto">
+                <h3>{{ numero_ventas.0 }} ventas exitosas.</h3>
+            </div>
+            <div class="col-md-4 custom-col">
+                <h4>Top 10 de parroquias de ventas en línea:</h4>
+                {# Agrega tu lógica y presentación para el informe 3 aquí #}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 custom-col">
+                <h4>Top 10 botellas más vendidas en la tienda física:</h4>
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+            <div class="col-md-4 custom-col text-center">
+                <h2>Puntos otorgados:</h2>
+                <img src="{% static 'images/puntos-otorgados.png' %}" style="max-width: 80%; height: auto; margin-bottom: 10px;" class="mx-auto">
+                <h3>{{ puntos_otorgados.0 }}</h3>
+            </div>
+            <div class="col-md-4 custom-col text-center">
+                <h2>Puntos canjeados:</h2>
+                <img src="{% static 'images/puntos-canjeados.png' %}" style="max-width: 70%; height: auto; margin-bottom: 10px;" class="mx-auto">
+                <h3>{{ puntos_canjeados.0 }}</h3>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'admin_menu' %}" class="btn btn-primary">Volver al menú principal</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ labels|safe }},
+                    datasets: [{
+                        label: 'Cantidad - Botellas',
+                        data: {{ data|safe }},
+                        backgroundColor: 'rgba(252, 89, 255, 0.8)',
+                        borderColor: 'rgba(252, 89, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0, 
+                            stepSize: 1 
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

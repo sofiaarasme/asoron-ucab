@@ -1,0 +1,609 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script src="{% static 'AdminLTE-3.2.0/pluggins/jquery/jquery.min.js'%}"></script>
+    <meta charset="UTF-8">
+    <title>Nueva Factura</title>
+    <style>
+
+        body {
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFEBCC;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-section {
+            width: 45%;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+
+        }
+
+        .form-row label {
+            width: 120px;
+            text-align: right;
+            margin-right: 5px;
+            font-size: 20px;
+        }
+
+        .form-row input,
+        .form-row select {
+            width: 190px;
+            font-size: 15px;
+        }
+
+        #tablaProductos {
+            border-collapse: collapse;
+            width: 100%;
+            padding: 8px;
+        }
+
+        #tablaProductos th, #tablaProductos td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #tablaProductos th {
+            background-color: #D4D4D4;
+        }
+
+        #tablaProductos tr:nth-child(even) {
+            background-color: #ECECEC;
+        }
+
+        #tablaProductos tr:nth-child(odd) {
+            background-color: #F6F6F6;
+        }
+
+        #tablaProductos tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #tablaProductos th:nth-child(1),
+        #tablaProductos td:nth-child(1) {
+            width: 50%;
+        }
+
+        #tablaProductos th:nth-child(2),
+        #tablaProductos td:nth-child(2),
+        #tablaProductos th:nth-child(3),
+        #tablaProductos td:nth-child(3) {
+            width: 25%;
+        }
+
+        ###############################
+        #tablaMetodos {
+            border-collapse: collapse;
+            width: 100%;
+            padding: 8px;
+        }
+
+        #tablaMetodos th, #tablaMetodos td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #tablaMetodos th {
+            background-color: #D4D4D4;
+        }
+
+        #tablaMetodos tr:nth-child(even) {
+            background-color: #ECECEC;
+        }
+
+        #tablaMetodos tr:nth-child(odd) {
+            background-color: #F6F6F6;
+        }
+
+        #tablaMetodos tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #tablaMetodos th:nth-child(1),
+        #tablaMetodos td:nth-child(1) {
+            width: 50%;
+        }
+
+        #tablaMetodos th:nth-child(2),
+        #tablaMetodos td:nth-child(2),
+        #tablaMetodos th:nth-child(3),
+        #tablaMetodos td:nth-child(3) {
+            width: 25%;
+        }
+
+        #total {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        #totalLabel {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .boton-agregar {
+            padding: 10px;
+            margin-top: 10px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px; /* Ajusta el tamaño del texto según sea necesario */
+        }
+        
+        .boton-agregar:hover {
+            background-color: #45a049;
+        }
+
+        .form-column {
+            margin-right: 200px; 
+        }
+        
+    </style>
+</head>
+<body>
+
+    <h1>Nueva Factura</h1>
+    <div class="container">
+        <hr style="border-top: 5px solid #ccc; margin: 20px 0;">
+        <div class="form-section">
+            <div class="form-row">
+                <label for="num_factura">Nº de Factura:</label>
+                <input type="text" id="num_factura" name="num_factura" value="{{ numero_factura }}" readonly>
+            </div>
+            <div class="form-row">
+                <label for="clientes">Cliente:</label>
+                <select id="clientes">
+                    <option value="">Selecciona un cliente</option>
+                    {% for cliente in clientes %}
+                        {% if cliente.0 == 'Juridico' %}
+                            <option value="{{ cliente.1 }}">{{ cliente.4 }}</option>
+                        {% else %}
+                            <option value="{{ cliente.1 }}">{{ cliente.10 }} {{ cliente.12 }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button class="boton-agregar" onclick="redirectRegistrarCliente()" style="width: 114px">Registrar Cliente</button>
+            </div>
+            <div class="form-row">
+                <label for="rif">RIF:</label>
+                <input type="text" id="rif" readonly>
+            </div>
+            <div class="form-row">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" readonly>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <div class="form-row">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fechaInput" name="fecha" value="{{ fecha_actual }}">
+            </div>
+            <div class="form-row">
+                <label for="producto">Producto:</label>
+                <select id="producto" name="producto" style="width: 150px">
+                    <option value="">Selecciona un producto</option>
+                    {% for item in inventario %}
+                        <option value="{{ item.0 }}" data-precio="{{ item.3 }}" data-cantidad="{{ item.2 }}">{{ item.1 }}</option>
+                    {% endfor %}
+                </select>
+                <button class="boton-agregar" onclick="agregarProducto()" style="width: 114px">Agregar producto</button>
+            </div>
+
+  
+            <div class="form-row">
+                <label for="precio">Precio:</label>
+                <input type="text" id="precio" name="precio" readonly>
+            </div>
+            <div class="form-row">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" name="cantidad" min="1">
+            </div>
+        </div>
+        <hr style="border-top: 5px solid #ccc; margin: 20px 0;">
+        <div class="form-section" style = "justify-content: space-evenly; width: 100%;">
+            <div class="form-row">
+                <label for="metodo_pago" style="margin-right: 10px;">Métodos de pago:</label>
+                <select id="metodo_pago" name="metodo_pago" style = "margin-right: 30px;">
+                    <option value="">Seleccionar método</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Cheque">Cheque</option>
+                    <option value="Puntos">Puntos</option>
+                </select>
+
+
+                <div class="form-row" id="campos_efectivo" style="display: none; justify-content: space-between; width: 100%;">
+                    <div class="column">
+                        <label for="denominacion">Denominación:</label>
+                        <input type="text" id="denominacion" name="denominacion">
+                    </div>
+                    <div class="column">
+                        <label for="monto_efectivo">Monto:</label>
+                        <input type="text" id="monto_efectivo" name="monto_efectivo">
+                    </div>
+                </div>
+                <div class="form-row" id="campos_tarjeta" style="display: none; justify-content: space-between; width: 100%;">
+                    <div class="column">
+                        <label for="numero_tarjeta">Número:</label>
+                        <input type="text" id="numero_tarjeta" name="numero_tarjeta">
+                    </div>
+                    <div class="column">
+                        <label for="banco">Banco:</label>
+                        <input type="text" id="banco" name="banco">
+                    </div>
+                    <div class="column">
+                        <label for="cvv">CVV:</label>
+                        <input type="text" id="cvv" name="cvv">
+                    </div>
+                    <div class="column">
+                        <label for="fecha_vencimiento">Fecha de Vencimiento:</label>
+                        <input type="text" id="fecha_vencimiento" name="fecha_vencimiento">
+                    </div>
+                    <div class="column">
+                        <label for="monto_tarjeta">Monto:</label>
+                        <input type="text" id="monto_tarjeta" name="monto_tarjeta">
+                    </div>
+                </div>
+                <div class="form-row" id="campos_cheque" style="display: none; justify-content: space-between; width: 100%;">
+                    <div class="column">
+                        <label for="numero_cheque">Número:</label>
+                        <input type="text" id="numero_cheque" name="numero_cheque">
+                    </div>
+                    <div class="column">
+                        <label for="banco_cheque">Banco:</label>
+                        <input type="text" id="banco_cheque" name="banco_cheque">
+                    </div>
+                    <div class="column">
+                        <label for="monto_cheque">Monto:</label>
+                        <input type="text" id="monto_cheque" name="monto_cheque">
+                    </div>
+                </div>
+                <div class="form-row" id="campos_puntos" style="display: none; justify-content: space-between; width: 100%;">
+                    <div class="column">
+                        <label for="cantidad_puntos">Cantidad a canjear:</label>
+                        <input type="text" id="cantidad_puntos" name="cantidad_puntos">
+                    </div>
+                    <div class="column">
+                        <label for="monto_puntos">Monto:</label>
+                        <input type="text" id="monto_puntos" name="monto_puntos">
+                    </div>
+                </div>
+                <button class="boton-agregar" onclick="agregarMetodoPago()" style="width: 114px">Agregar método</button>
+            </div>
+        </div>
+        <hr style="border-top: 5px solid #ccc; margin: 20px 0;">
+    </div>
+    <div class = "form-section">
+        <div class="form-column">
+            <h3>Productos agregados:</h3>
+            <table id="tablaProductos">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                </tbody>
+            </table>
+
+            <div class="form-row form-row--buttons" style="margin-top: 25px">
+                <label id="totalLabel" for="total">Total:</label>
+                <span id="total">0</span>
+            </div>
+        </div>
+
+        <div class="form-column">
+            <h3>Métodos de Pago:</h3>
+            <table id="tablaMetodos">
+                <thead>
+                    <tr>
+                        <th>Método</th>
+                        <th>Monto</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                </tbody>
+            </table>
+
+            <div class="form-row form-row--buttons" style="margin-top: 25px">
+                <label id="totalLabel" for="total_metodos">Total:</label>
+                <span id="total_metodos">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="boton-registrar">
+        <form id="registrarForm" method="post" action="{% url 'facturacion:registrar_venta' %}">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="num_factura" value="{{ numero_factura }}">
+                <input type="hidden" name="rif" id="rif" value="">
+                <input type="hidden" name="fecha" value="{{ fecha_actual }}">
+                <input type="hidden" name="total" id="total_venta" value="0">
+                <input type="hidden" name="tabla_productos[]" id="tabla_productos" value="">
+                <input type="hidden" name="tabla_metodos[]" id="tabla_metodos" value="">
+                <button type="submit" onclick="registrarVenta()">Registrar Venta</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function redirectRegistrarCliente() {
+            window.location.href = '/clientes/natural/registrar_cliente_natural/';
+        }
+
+        function sumarMontosMetodosPago() {
+            var tablaMetodos = document.getElementById("tablaMetodos");
+            var filas = tablaMetodos.getElementsByTagName("tr");
+            var total = 0;
+        
+            for (var i = 1; i < filas.length; i++) {
+                var celdaMonto = filas[i].getElementsByTagName("td")[1];
+                var monto = parseFloat(celdaMonto.innerHTML);
+                total += monto;
+            }
+        
+            document.getElementById('total_metodos').innerHTML = total.toFixed(2);
+        }
+
+        var metodosAgregados = [];
+
+        function agregarMetodoPago() {
+            var metodoSeleccionado = document.getElementById("metodo_pago").value;
+            var monto = 0;
+
+            switch (metodoSeleccionado) {
+                case "Efectivo":
+                case "Tarjeta":
+                case "Cheque":
+                case "Puntos":
+                    monto = parseFloat(document.getElementById("monto_" + metodoSeleccionado.toLowerCase()).value);
+                    break;
+            }
+
+            if (metodoSeleccionado && monto) {
+                // Agregar el método de pago y su monto al array
+                metodosAgregados.push([metodoSeleccionado, monto]);
+
+                // Actualizar la tabla de métodos de pago
+                var tablaMetodos = document.getElementById("tablaMetodos").getElementsByTagName("tbody")[0];
+                var fila = tablaMetodos.insertRow();
+
+                var celdaMetodoPago = fila.insertCell(0);
+                var celdaMonto = fila.insertCell(1);
+
+                celdaMetodoPago.innerHTML = metodoSeleccionado;
+                celdaMonto.innerHTML = monto;
+
+                // Eliminar la opción seleccionada de la lista desplegable
+                var selectMetodosPago = document.getElementById("metodo_pago");
+                for (var i = 0; i < selectMetodosPago.options.length; i++) {
+                    if (selectMetodosPago.options[i].value === metodoSeleccionado) {
+                        selectMetodosPago.remove(i);
+                        break;
+                    }
+                }
+
+                sumarMontosMetodosPago();
+
+                // Actualizar el valor del campo oculto con los métodos de pago
+                document.getElementById('tabla_metodos').value = JSON.stringify(metodosAgregados);
+            } else {
+                console.error('Por favor, seleccione un método de pago y proporcione un monto válido.');
+            }
+        }
+
+
+        document.getElementById('metodo_pago').addEventListener('change', function() {
+            // Ocultar todos los campos al inicio
+            document.getElementById('campos_efectivo').style.display = 'none';
+            document.getElementById('campos_tarjeta').style.display = 'none';
+            document.getElementById('campos_cheque').style.display = 'none';
+            document.getElementById('campos_puntos').style.display = 'none';
+        
+            // Obtener el valor seleccionado en el select de métodos de pago
+            var metodoSeleccionado = this.value;
+        
+            // Mostrar los campos correspondientes al método seleccionado
+            if (metodoSeleccionado === 'Efectivo') {
+                document.getElementById('campos_efectivo').style.display = 'block';
+            } else if (metodoSeleccionado === 'Tarjeta') {
+                document.getElementById('campos_tarjeta').style.display = 'block';
+            } else if (metodoSeleccionado === 'Cheque') {
+                document.getElementById('campos_cheque').style.display = 'block';
+            } else if (metodoSeleccionado === 'Puntos') {
+                document.getElementById('campos_puntos').style.display = 'block';
+            }
+        });
+
+        var productosAgregados = [];
+
+        function registrarVenta() {
+            event.preventDefault(); 
+            var num_factura = document.getElementById('num_factura').value;
+            var rif = document.getElementById('rif').value;
+            var fecha = document.getElementById('fechaInput').value.split('/').reverse().join('-');
+            var total_venta = document.getElementById('total_venta').value;
+    
+            var formData = new FormData();
+            formData.append('num_factura', num_factura);
+            formData.append('rif', rif);
+            formData.append('fecha', fecha);
+            formData.append('total', total_venta);
+    
+            productosAgregados.forEach(producto => {
+                formData.append('tabla_productos[]', producto.join(','));
+            });
+
+            metodosAgregados.forEach(metodo => {
+                formData.append('tabla_metodos[]', metodo.join(','));
+            });
+    
+            fetch('{% url "facturacion:registrar_venta" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '{% url "facturacion:venta_exitosa" %}';
+                } else {
+                    console.error('Error al registrar la venta');
+                    // Manejar el error aquí si es necesario
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Manejar el error aquí si es necesario
+            });
+        }
+        
+        
+
+        function actualizarCampos() {
+            var seleccionado = document.getElementById('clientes').value;
+    
+            {% for cliente in clientes %}
+                if ('{{ cliente.1 }}' === seleccionado) {
+                    if ('{{ cliente.0 }}' === 'Juridico') {
+                        document.getElementById('rif').value = '{{ cliente.1 }}';
+                        document.getElementById('direccion').value = '{{ cliente.8 }}';
+                    } else {
+                        document.getElementById('rif').value = '{{ cliente.1 }}';
+                        document.getElementById('direccion').value = '{{ cliente.14 }}';
+                    }
+                }
+            {% endfor %}
+        }
+
+        // Obtener el elemento por su ID
+        var fechaInput = document.getElementById('fechaInput');
+
+        // Verificar si el elemento existe antes de usarlo
+        if (fechaInput) {
+            // Hacer algo con el elemento, como obtener su valor
+            var fechaSeleccionada = fechaInput.value;
+            console.log('Fecha seleccionada:', fechaSeleccionada);
+        } else {
+            console.error('El elemento con el ID "fechaInput" no existe.');
+        }
+        document.getElementById('clientes').addEventListener('change', actualizarCampos);
+        actualizarCampos();
+
+        document.getElementById('producto').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var precio = selectedOption.getAttribute('data-precio');
+            document.getElementById('precio').value = precio;
+        });
+
+        document.getElementById('producto').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var cantidadMaxima = parseInt(selectedOption.getAttribute('data-cantidad'));
+            var cantidadInput = document.getElementById('cantidad');
+            
+            cantidadInput.max = cantidadMaxima;
+            
+            if (parseInt(cantidadInput.value) > cantidadMaxima) {
+                cantidadInput.value = cantidadMaxima;
+            }
+        });
+
+        function calcularTotal() {
+            var tabla = document.getElementById('tablaProductos');
+            var filas = tabla.getElementsByTagName('tr');
+            var total = 0;
+    
+            for (var i = 1; i < filas.length; i++) {
+                var celdaPrecio = filas[i].getElementsByTagName('td')[1];
+                var celdaCantidad = filas[i].getElementsByTagName('td')[2];
+    
+                var precio = parseFloat(celdaPrecio.innerHTML);
+                var cantidad = parseFloat(celdaCantidad.innerHTML);
+    
+                total += precio * cantidad;
+            }
+    
+            document.getElementById('total').innerHTML = total.toFixed(2);
+            document.getElementById('total_venta').value = total.toFixed(2);
+        }
+
+        function agregarProducto() {
+            console.log("hola");
+            var productoSelect = document.getElementById('producto');
+            var selectedOption = productoSelect.options[productoSelect.selectedIndex];
+            var nombreProducto = selectedOption.text;
+            var precio = selectedOption.getAttribute('data-precio');
+            var cantidad = document.getElementById('cantidad').value;
+
+            if (nombreProducto && precio && cantidad) {
+
+                productosAgregados.push([cantidad, precio, nombreProducto]);
+
+                var cuerpoTabla = document.getElementById('cuerpoTabla');
+                var nuevaFila = cuerpoTabla.insertRow();
+
+                var celdaProducto = nuevaFila.insertCell();
+                var celdaPrecio = nuevaFila.insertCell();
+                var celdaCantidad = nuevaFila.insertCell();
+
+                celdaProducto.innerHTML = nombreProducto;
+                celdaPrecio.innerHTML = precio;
+                celdaCantidad.innerHTML = cantidad;
+
+                document.getElementById('producto').selectedIndex = 0;
+                document.getElementById('precio').value = '';
+                document.getElementById('cantidad').value = '';
+                calcularTotal();
+                document.getElementById('tabla_productos').value = productosAgregados.join(';');
+
+                for (var i = 0; i < productoSelect.options.length; i++) {
+                    if (productoSelect.options[i].value === selectedOption.value) {
+                        productoSelect.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+    </script>
+    
+    
+</body>
+</html>

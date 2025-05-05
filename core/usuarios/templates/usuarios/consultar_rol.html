@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Información del Rol</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 600px;
+            margin-bottom: 10px;
+            padding: 50px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            margin-bottom: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            width: 100%; 
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: row; /* Cambio a dirección horizontal */
+            width: 45%; /* O ajusta el ancho según tu preferencia */
+            padding: 15px;
+            justify-content: space-between; /* Para distribuir los botones */
+        }
+
+        .button-agregar {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: #007bff;
+        }
+
+        .button-modificar {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: #007bff;
+        }
+
+        .button-eliminar {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: #dc3545;
+        }
+
+        .button-lista {
+            color: #000000;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: transparent;
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>Información del Rol</h1>
+    <div class="info-container">
+        <div class="info">
+            <div class="label">ID:</div>
+            <div class="value">{{ rol.rol_id }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Nombre:</div>
+            <div class="value">{{ rol.rol_nombre }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Descripción:</div>
+            <div class="value">{{ rol.rol_descripcion }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Permisos:</div>
+            <div class="value">
+                {% for rol_permiso in rol_permisos %}
+                    {{ rol_permiso.fk_permiso.permiso_nombre }} ({{ rol_permiso.fk_permiso.permiso_tipo }})
+                    {% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    Sin permisos asignados
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+        <div class="button-container">
+            <a href="{% url 'usuarios:modificar_rol' rol.rol_id %}" class="button-modificar">Modificar Rol</a>
+            <a href="#" onclick="mostrarModal()" class="button-eliminar">Eliminar Rol</a>
+            <a href="{% url 'usuarios:index_roles' %}" class="button-lista">Volver a la lista de Roles</a>
+        </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            {% include 'usuarios/eliminar_rol.html' %}
+        </div>
+    </div>
+
+    <script>
+        function mostrarModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

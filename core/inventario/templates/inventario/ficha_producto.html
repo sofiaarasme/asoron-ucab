@@ -1,0 +1,178 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Información del Producto</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #001f3f; /* Azul oscuro */
+            margin: 0;
+            padding: 20px;
+            color: white; /* Todas las letras son blancas */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Alineación de espacio entre las columnas */
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        .info {
+            flex: 0 0 calc(33.33% - 2%); /* Ancho del 33.33%, dejando espacio para márgenes */
+            margin: 1%; /* Márgenes entre los elementos */
+            box-sizing: border-box; /* Incluir el padding y el border en el ancho */
+            background-color: transparent; /* Campos transparentes */
+            padding: 5px;
+        }
+
+        .image-container {
+            flex: 0 0 calc(33.33% - 2%); /* Ancho del 33.33%, dejando espacio para márgenes */
+            margin: 1%; /* Márgenes entre los elementos */
+            box-sizing: border-box; /* Incluir el padding y el border en el ancho */
+            background-color: transparent; /* Campos transparentes */
+            padding: 5px;
+        }
+
+        .product-image {
+            max-width: 100%; /* Ajustar la imagen al ancho del contenedor */
+            border-radius: 4px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            padding: 15px;
+            justify-content: center; /* Centrar los botones */
+        }
+
+        .button-agregar,
+        .button-modificar,
+        .button-eliminar,
+        .button-lista {
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            text-align: center;
+            margin: 0 10px; /* Espacio entre botones */
+        }
+
+        .button-agregar,
+        .button-modificar,
+        .button-eliminar {
+            background-color: #007bff;
+        }
+
+        .button-eliminar {
+            background-color: #dc3545;
+        }
+
+        .button-lista {
+            color: #ffffff;
+            background-color: green;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Ficha del Producto</h1>
+    <div class="info-container">
+        <div class="info">
+            <div class="label">Descripcion:</div>
+            <div class="value">{{ ficha.1 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Años de Añejamiento:</div>
+            <div class="value">{{ ficha.2 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Mezclado:</div>
+            <div class="value">{{ ficha.3 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Nota de Catado:</div>
+            <div class="value">{{ ficha.4}}</div>
+        </div>
+        <div class="info">
+            <div class="label">Grados de Alcohol:</div>
+            <div class="value">{{ ficha.13 }}40% Vol</div>
+        </div>
+        <div class="info">
+            <div class="label">Como Servir:</div>
+            <div class="value">{{ ficha.5 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Capacidad:</div>
+            <div class="value">{{ ficha.6}} L</div>
+        </div>
+        <div class="info">
+            <div class="label">Grados de Alcohol:</div>
+            <div class="value">{{ ficha.13 }}</div>
+        </div>
+        <div class="info">
+            <div class="label">Origen:</div>
+            <div class="value">{{ ficha.7}}</div>
+        </div>
+        <div class="info">
+            <div class="label">Caja:</div>
+            <div class="value">{{ ficha.8}}</div>
+        </div>
+        <div class="info">
+            <div class="label">Botella:</div>
+            <div class="value">{{ ficha.9}}</div>
+        </div>
+        <div class="info">
+            <div class="label">Tapa:</div>
+            <div class="value">{{ ficha.10}}</div>
+        </div>
+        <div class="info">
+            <div class="label">Alto:</div>
+            <div class="value">{{ ficha.11}} cm.</div>
+        </div>
+        <div class="info">
+            <div class="label">Ancho:</div>
+            <div class="value">{{ ficha.12}} cm.</div>
+        </div>
+        {% comment %} <div class="image-container">
+            <img class="product-image" src="{% static 'images/santa-teresa.png' %}" alt="Imagen del producto">
+        </div> {% endcomment %}
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'inventario:index_producto' %}" class="button-lista">Volver a la lista de Productos</a>
+    </div>
+    </div>
+    <!-- Modal -->
+    {% comment %} <div id="myModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            {% include 'inventario/eliminar_producto.html' %}
+        </div>
+    </div> {% endcomment %}
+
+    <script>
+        function mostrarModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% extends 'home.html'%}
+
+{% block body%}
+    <body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+    {% include 'header.html'%}
+
+    <div class="content-wrapper">
+        
+        <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">
+                        <i class="bi bi-calendar-event-fill mr-2" style="color: #685747;"></i> Lista de Eventos
+                    </h1>
+                </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url 'eventos:registrar_evento' %}">Nuevo Evento</a></li>
+                <li class="breadcrumb-item"><a href="#">Departamentos</a></li>
+                </ol>
+            </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        </div>
+        <div class = "content">
+            <div class = "container"> 
+                {% block content%}
+                <style>
+                    .espaciado {
+                        margin-bottom: 20px; /* Espaciado en la parte inferior */
+                        padding-left: 10px;  /* Espaciado en el lado izquierdo */
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                
+                    body {
+                      font-family: Arial, sans-serif;
+                  }
+                
+                  h2 {
+                      margin-bottom: 20px;
+                  }
+                
+                  table {
+                      border-collapse: collapse;
+                      width: 80%;
+                      margin-left: auto;
+                      margin-right: auto; 
+                  }
+                
+                  th, td {
+                      padding: 12px;
+                      text-align: left;
+                      border-bottom: 1px solid #ddd;
+                  }
+                
+                  tbody tr:hover {
+                    background-color: #DDDDDD;
+                }
+                
+                  /* Estilos adicionales para mejorar la apariencia */
+                  th {
+                      background-color: #f2f2f2;
+                  }
+                  </style>
+                    <table border="1", style = espaciado>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Ubicacion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evento in lista_eventos %}
+                                <tr onclick="window.location='/eventos/{{ evento.evento_id }}';" style="cursor: pointer;">
+                                    <td>{{ evento.evento_nombre}}</td>
+                                    <td>{{ evento.evento_fecha_inicio }}</td>                      
+                                    <td>{{ evento.evento_fecha_fin }}</td>
+                                    <td>{{ evento.evento_ubicacion }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+        {% include 'footer.html'%}
+    </div>
+    </body>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'sitioweb_home.html' %}
+
+{% block content %}
+    <style>
+        body {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .evento-info {
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
+            font-size: 23px;
+            color: #545454;
+            margin-bottom: 8px;
+            line-height: 2.0;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .entrada-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .entrada-info label {
+            font-size: 23px;
+            margin-right: 10px;
+        }
+
+        .entrada-info input {
+            font-size: 23px;
+            width: 60px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .entrada-info button {
+            font-size: 23px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .container {
+            min-height: calc(100vh - 150px); /* Calcula la altura mínima del contenido */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .evento-info {
+            flex-grow: 1; /* Hace que este div ocupe todo el espacio restante */
+            /* Resto de tus estilos... */
+        }
+
+        .cantidad-comprar input {
+            font-size: 23px;
+            width: 60px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .total-pagar input {
+            font-size: 23px;
+            width: 60px;
+            text-align: center;
+            margin-right: 10px;
+            margin-top: 15px;
+        }
+
+        .cantidad-comprar button {
+            background-color: blue;
+            color: white;
+            font-size: 22px;
+            width: 40px; /* Ancho fijo para ambos botones */
+            height: 40px; /* Alto fijo para ambos botones */
+            padding: 0; /* Elimina el espaciado interno */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        .boton-comprar button {
+            background-color: green; 
+            color: white;
+            font-size: 24px; 
+            padding: 15px 25px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+    <div class="container">
+        <div class="evento-info">
+            <h1>{{ evento.evento_nombre }}</h1>
+            <p>Fecha: {{ evento.evento_fecha_inicio }}</p>
+            <p>Ubicación: {{ evento.evento_ubicacion }}</p>
+            <!-- Entradas del evento -->
+            <div class="entrada-info">
+                <label for="numero-entradas">Entradas disponibles:</label>
+                <input type="text" id="numero-entradas" value="{{ cantidad_entradas }}" readonly>
+            </div>
+            
+            <div class="cantidad-comprar">
+                <label for="cantidad-comprar">Cantidad a comprar:</label>
+                <input type="text" id="cantidad-comprar" value="0" readonly>
+                <button onclick="decrementar()">-</button>
+                <button onclick="incrementar({{ cantidad_entradas }})">+</button>
+            </div>
+            <div class="total-pagar">
+                <label for="total-pagar">TOTAL a Pagar:</label>
+                <input type="text" id="total-pagar" value="0" readonly>
+                <label for="total-pagar">$</label>
+            </div>
+            <div class="boton-comprar">
+                {% if evento.evento_id %}
+                    <form id="compraForm" method="POST" action="{% url 'sitioweb:realizar_compra' evento.evento_id %}">
+                        {% csrf_token %}
+                        <div>
+                            <input type="hidden" id="cantidad-comprar-input" name="cantidad_comprar" value="0">
+                            <input type="hidden" name="evento_id" value="{{ evento.evento_id }}">
+                            <button type="button" onclick="submitForm()">COMPRAR</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p>El ID del evento no está disponible o es inválido.</p>
+                {% endif %}
+            </div>
+            <div class="boton-regresar">
+                <a href="/sitioweb/eventos">Volver a Eventos</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        let cantidadComprar = 0;
+        const precioEntrada = {{ precio_entrada }};
+
+        function actualizarTotal() {
+            const campoCantidad = document.getElementById('cantidad-comprar');
+            const campoTotal = document.getElementById('total-pagar');
+
+            const cantidad = parseInt(campoCantidad.value);
+            const total = cantidad * precioEntrada;
+            
+            campoTotal.value = total;
+        }
+
+        function incrementar(maximo) {
+            const campoCantidad = document.getElementById('cantidad-comprar');
+            if (cantidadComprar < maximo) {
+                cantidadComprar++;
+                campoCantidad.value = cantidadComprar;
+                campoCantidad.removeAttribute('readonly');
+                actualizarTotal(); // Actualiza el total al incrementar
+            }
+        }
+
+        function decrementar() {
+            const campoCantidad = document.getElementById('cantidad-comprar');
+            if (cantidadComprar > 0) {
+                cantidadComprar--;
+                campoCantidad.value = cantidadComprar;
+                if (cantidadComprar === 0) {
+                    campoCantidad.setAttribute('readonly', 'readonly');
+                }
+                actualizarTotal();
+            }
+        }
+
+        // Añade esta función para enviar el formulario con la cantidad seleccionada
+        function submitForm() {
+            // Actualiza el campo oculto con la cantidad seleccionada
+            document.getElementById('cantidad-comprar-input').value = cantidadComprar;
+            // Envía el formulario
+            document.getElementById('compraForm').submit();
+        }
+    </script>
+{% endblock %}

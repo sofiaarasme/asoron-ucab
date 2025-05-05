@@ -1,0 +1,11 @@
+<head>
+    <title>Agregar Telefono</title>    
+</head>
+<body>
+    <h1>Agregar Telefono</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Registrar</button>
+    </form>
+    <a href="{% url 'nomina:index' %}">Cancelar</a>

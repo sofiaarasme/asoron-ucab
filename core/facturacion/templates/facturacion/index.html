@@ -1,0 +1,98 @@
+{% extends 'home.html'%}
+
+{% block body%}
+    <body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+    {% include 'header.html'%}
+
+    <div class="content-wrapper">
+        
+        <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">
+                        <i class="bi bi-file-earmark-text-fill mr-2" style="color: #685747;"></i> Facturas
+                    </h1>
+                </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url 'facturacion:crear_factura' %}">CREAR FACTURA</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'facturacion:index_puntos' %}">PUNTOS</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'facturacion:index_divisas' %}">DIVISAS</a></li>
+                </ol>
+            </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        </div>
+        <div class = "content">
+            <div class = "container"> 
+                {% block content%}
+                <style>
+                    .espaciado {
+                        margin-bottom: 20px; /* Espaciado en la parte inferior */
+                        padding-left: 10px;  /* Espaciado en el lado izquierdo */
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                
+                    body {
+                      font-family: Arial, sans-serif;
+                  }
+                
+                  h2 {
+                      margin-bottom: 20px;
+                  }
+                
+                  table {
+                      border-collapse: collapse;
+                      width: 80%;
+                      margin-left: auto;
+                      margin-right: auto; 
+                  }
+                
+                  th, td {
+                      padding: 12px;
+                      text-align: left;
+                      border-bottom: 1px solid #ddd;
+                  }
+                
+                  tbody tr:hover {
+                    background-color: #DDDDDD;
+                }
+                
+                  /* Estilos adicionales para mejorar la apariencia */
+                  th {
+                      background-color: #f2f2f2;
+                  }
+                  </style>
+                    <table border="1", style = espaciado>
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <!-- Añade más encabezados según tus campos -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for factura in lista_facturas %}
+                                <tr onclick="window.location='/facturacion/{{ factura.0 }}';" style="cursor: pointer;">
+                                    <td>{{ factura.0 }}</td>
+                                    <td>{{ factura.1 }}</td>
+                                    <td>{{ factura.2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+        {% include 'footer.html'%}
+    </div>
+    </body>
+{% endblock %}
+

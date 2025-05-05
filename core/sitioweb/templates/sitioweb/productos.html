@@ -1,0 +1,59 @@
+{% extends 'sitioweb_home.html' %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+
+        .publicidad {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .producto {
+            width: calc(25% - 20px); /* Ancho para 4 columnas con gap de 20px */
+            background-color: #fff; /* Color de fondo opcional */
+            box-sizing: border-box;
+            border: 1px solid #ccc; /* Borde para los productos */
+            text-align: center; /* Centrar texto */
+            flex-grow: 1;
+            padding: 20px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .titulo {
+            text-align: center; /* Centrar el texto */
+            font-size: 50px; /* Tamaño de fuente más grande */
+            color: #545454; /* Color gris */
+            font-family: Arial, sans-serif; /* Tipo de fuente */
+            padding: 40px;
+        }
+
+        .container {
+            min-height: calc(100vh - 150px); /* Calcula la altura mínima del contenido */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+    </style>
+    <div class="container">
+        <h1 class="titulo">Productos disponibles</h1>
+        <!-- Cuadros de productos -->
+        <div class="publicidad">
+            {% for producto in productos %}
+                <a href="{% url 'sitioweb:info_producto' producto.botella_id %}" class="producto"> <!-- Enlace a la página sitioweb:index -->
+                    <div>
+                        <h2>{{ producto.botella_nombre }}</h2>
+                        <img src="{% static 'images/santa-teresa.png' %}" alt="{{ producto.botella_nombre }}" style="max-width: 40%; height: auto;">
+                        <p>Precio: ${{producto.botella_precio}}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

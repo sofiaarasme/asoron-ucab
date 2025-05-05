@@ -1,0 +1,56 @@
+{% extends 'sitioweb_home.html' %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        .publicidad {
+            width: 80px; /* Ancho máximo del contenedor */
+            margin: 0 auto; /* Centra el contenedor horizontalmente */
+            display: flex;
+            align-items: center; /* Alinea las imágenes verticalmente */
+            justify-content: space-around;
+            gap: 60px;
+        }
+
+        .titulo {
+            text-align: center; /* Centrar el texto */
+            font-size: 50px; /* Tamaño de fuente más grande */
+            color: #545454; /* Color gris */
+            font-family: Arial, sans-serif; /* Tipo de fuente */
+        }
+
+        figure {
+            text-align: center;
+        }
+    
+        figcaption {
+            color: #545454; /* Color del texto */
+            font-weight: bold; /* Negrita */
+            font-size: 20px; /* Tamaño de fuente más grande */
+        }
+
+    </style>
+    <h1 class="titulo">NUESTRA COLECCIÓN</h1>
+    <!-- Imágenes de publicidad -->
+    <div class="publicidad">
+        <img src="{% static 'images/ron-asoron1.png' %}" alt="Publicidad 1" style="width: 340px; height: auto; margin-left: 12px;">
+        <img src="{% static 'images/ron-asoron2.png' %}" alt="Publicidad 2" style="width: 380px; height: auto; margin-left: 12px;">
+        <img src="{% static 'images/ron-asoron3.png' %}" alt="Publicidad 2" style="width: 350px; height: auto; margin-left: 12px;">
+    </div>
+    <h1 class="titulo">LO MÁS VENDIDO</h1>
+    <div class="publicidad">
+        <figure>
+            <img src="{% static 'images/ron-carupano.png' %}" alt="Publicidad 1" style="width: 330px; height: auto; margin-left: 12px;">
+            <figcaption>Ron Carúpano</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'images/santa-teresa.png' %}" alt="Publicidad 2" style="width: 300px; height: auto; margin-left: 12px;">
+            <figcaption>Ron Santa Teresa</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'images/roble-viejo.png' %}" alt="Publicidad 3" style="width: 410px; height: auto; margin-left: 12px;">
+            <figcaption>Ron Roble Viejo</figcaption>
+        </figure>
+    </div>
+{% endblock %}

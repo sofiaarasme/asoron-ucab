@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Compra Exitosa</title>
+    <!-- Estilos del modal -->
+    <style>
+        /* Estilos para el modal */
+        .modal {
+            display: block; /* Mostrar el modal */
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: #FFEBCC;
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal de compra exitosa -->
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1>Compra realizada exitosamente.</h1>
+            <a href="/sitioweb/eventos">Volver a Eventos</a>
+        </div>
+    </div>
+
+    <!-- Script para cerrar el modal -->
+    <script>
+        var modal = document.getElementsByClassName('modal')[0];
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
