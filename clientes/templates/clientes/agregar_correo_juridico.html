@@ -1,0 +1,50 @@
+<head>
+    <title>Agregar Correo</title>    
+</head>
+<style>
+    body{
+        background-color: #FFEBCC;
+    }
+    h1{
+        text-align: center;
+        color: #fffff;
+    }
+    form{
+        text-align: center;
+    }
+    button{
+        background-color: #3CA92B;
+        color: white;
+        border: 2px solid #3CA92B;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+    button:hover{
+        background-color: white;
+        color: green;
+    }
+    a{
+        background-color: red;
+        color: white;
+        border: 2px solid red;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 10px;
+        text-decoration: none;
+    }
+    a:hover{
+        background-color: white;
+        color: red;
+    }
+</style>
+<body>
+    <h1>Agregar Correo</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Registrar</button>
+    </form>
+    <a href="{% url 'clientes:index_juridico' %}">Cancelar</a>

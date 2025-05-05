@@ -1,0 +1,207 @@
+<head>
+    <title>Informacion del Cliente</title>
+</head>
+<style>
+    .espaciado {
+        margin-bottom: 20px; /* Espaciado en la parte inferior */
+        padding-left: 10px;  /* Espaciado en el lado izquierdo */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto; 
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+        background-color: #DDDDDD;
+    }
+
+    /* Estilos adicionales para mejorar la apariencia */
+    th {
+        background-color: #f2f2f2;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        background-color: #FFEBCC;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .info-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 600px;
+        margin-bottom: 10px;
+        padding: 50px;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        width: 280px;
+        margin-bottom: 10px;
+    }
+
+    .label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .value {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column; /* Cambio a dirección horizontal */
+        padding: 50px;
+    }
+
+    .button-agregar {
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 10px;
+        background-color: #007bff;
+    }
+
+    .button-telefono {
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 10px;
+        background-color: #007bff;
+    }
+
+    .button-modificar {
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 10px;
+        background-color: #007bff;
+    }
+
+    .button-eliminar {
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 10px;
+        background-color: #dc3545;
+    }
+
+    .button-lista {
+        color: #000000;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 10px;
+        background-color: transparent;
+    }
+
+
+</style>
+<body>
+    <h1>Informacion del Cliente</h1>
+    <p>Denominacion Comercial: {{ cliente_j.cliente_denominacion_comercial }}</p>
+    <p>Razon Social: {{ cliente_j.cliente_razon_social }}</p>
+    <p>RIF: {{ cliente_j.cliente_j_rif }}</p>
+    <p>Pagina Web: {{ cliente_j.cliente_pagina_web }}</p>
+    <p>Capital Disponible: {{ cliente_j.cliente_capital_disponible }}</p>
+    <p>Direccion Fiscal: {{ cliente_j.cliente_direccion_fiscal }}</p>
+    <p>Direccion Fisica: {{ cliente_j.cliente_direccion_fisica }}</p>
+    <p>Lugar: {{ cliente_j.fk_lugar.lugar_nombre }}</p>
+
+    <h1>Personas de Contacto</h1>
+    <table border="1", style = espaciado>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>Telefonos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contacto in cliente_j.contactos.all %}
+                <tr onclick="window.location='/clientes/juridico/{{ cliente_j.cliente_j_rif }}/{{contacto.contacto_id}}';" style="cursor: pointer;">
+                    <td>{{ contacto.contacto_nombre}} {{contacto.contacto_apellido}}</td>
+                    <td>{{ contacto.contacto_cargo }}</td>
+                    <td>
+                        {% for telefono in contacto.telefonos.all %}
+                            {{ telefono.telefono_codigo }}{{ telefono.telefono_numero }}<br>
+                        {% endfor %}
+                    </td> 
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="button-container">
+        <p><a href="{% url 'clientes:agregar_telefono_juridico' cliente_j.cliente_j_rif %}" class="button-telefono">Agregar Telefono</a></p>
+        <a href="{% url 'clientes:agregar_correo_juridico' cliente_j.cliente_j_rif %}" class="button-agregar">Agregar Correo</a>
+        <a href="{% url 'clientes:agregar_contacto' cliente_j.cliente_j_rif %}" class="button-agregar">Agregar Persona de Contacto</a>
+        <a href="{% url 'clientes:modificar_juridico' cliente_j.cliente_j_rif %}" class="button-modificar">Modificar Cliente</a>
+        <a href="#" onclick="mostrarModal()" class="button-eliminar">Eliminar Cliente</a>
+        <p><a href="{% url 'clientes:index_juridico' %}" class="button-lista">Volver a la lista de Clientes</a></p>
+    </div>
+    <!-- Modal -->
+    <div id="myModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            {% include 'clientes/eliminar_juridico.html' %}
+        </div>
+    </div>
+
+    <script>
+        function mostrarModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    </script>
+</body>

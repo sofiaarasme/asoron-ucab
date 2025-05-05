@@ -1,0 +1,111 @@
+{% extends 'home.html'%}
+
+{% block body%}
+    <body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+    {% include 'header.html'%}
+
+    <div class="content-wrapper">
+        
+        <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">
+                        <i class="bi bi-emoji-smile-fill mr-2" style="color: #685747;"></i> Lista de Clientes Naturales
+                    </h1>
+                </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url 'facturacion:crear_factura' %}">Ir a Facturar</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'clientes:registrar_cliente_natural' %}">Nuevo</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'clientes:index_juridico' %}">Clientes Juridicos</a></li>
+                <li class="breadcrumb-item"><a href="#">Afiliados</a></li>
+                </ol>
+            </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        </div>
+        <div class = "content">
+            <div class = "container"> 
+                {% block content%}
+                <style>
+                    .espaciado {
+                        margin-bottom: 20px; /* Espaciado en la parte inferior */
+                        padding-left: 10px;  /* Espaciado en el lado izquierdo */
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                
+                    body {
+                      font-family: Arial, sans-serif;
+                  }
+                
+                  h2 {
+                      margin-bottom: 20px;
+                  }
+                
+                  table {
+                      border-collapse: collapse;
+                      width: 80%;
+                      margin-left: auto;
+                      margin-right: auto; 
+                  }
+                
+                  th, td {
+                      padding: 12px;
+                      text-align: left;
+                      border-bottom: 1px solid #ddd;
+                  }
+                
+                  tbody tr:hover {
+                    background-color: #DDDDDD;
+                }
+                
+                  /* Estilos adicionales para mejorar la apariencia */
+                  th {
+                      background-color: #f2f2f2;
+                  }
+                  </style>
+                    <table border="1", style = espaciado>
+                        <thead>
+                            <tr>
+                                <th>Nombre Completo</th>
+                                <th>RIF</th>
+                                <th>Cedula</th>
+                                <th>Correos</th>
+                                <th>Telefonos</th>
+                                <th>Direccion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in lista_clientes_naturales %}
+                                <tr onclick="window.location='/clientes/natural/{{ cliente.cliente_n_rif }}';" style="cursor: pointer;">
+                                    <td>{{ cliente.cliente_p_nombre }} {{ cliente.cliente_p_apellido }}</td>
+                                    <td>{{ cliente.cliente_n_rif }}</td>
+                                    <td>{{ cliente.cliente_cedula }}</td>
+                                    <td>
+                                        {% for correo in cliente.correos.all %}
+                                            {{ correo.correo_direccion }}<br>
+                                        {% endfor %}
+                                    </td> 
+                                    <td>
+                                        {% for telefono in cliente.telefonos.all %}
+                                            {{ telefono.telefono_codigo }}{{ telefono.telefono_numero }}<br>
+                                        {% endfor %}
+                                    </td> 
+                                    <td>{{ cliente.cliente_direccion }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+        {% include 'footer.html'%}
+    </div>
+    </body>
+{% endblock %}

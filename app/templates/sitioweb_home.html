@@ -1,0 +1,113 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Sitio Web</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+        }
+        
+        header {
+            background-color: #685747;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #685747;
+        }
+
+        nav ul li {
+            margin-left: 50px;
+            padding: 5px 10px;
+        }
+
+        nav ul li:first-child {
+            margin-left: 10px;
+            border: none;
+            border-radius: none; /* Elimina el borde del logo */
+            background: none; /* Elimina el fondo del logo */
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Estilos para los enlaces a la derecha */
+        nav ul li:nth-last-child(-n+6) a {
+            color: white;
+            font-family: Arial, sans-serif; /* Tipo de letra */
+            font-size: 22px; /* Tamaño de fuente más grande */
+        }
+
+        /* Agrega un margen derecho para el botón Carrito */
+        nav ul li:nth-last-child(1) a {
+            margin-right: 28px;
+        }
+
+        .logo-container {
+            margin-right: auto;
+            margin-left: 15px;
+        }
+
+        footer {
+            background-color: #685747;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+    
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header>
+        <!-- Barra de navegación -->
+        <nav>
+            <ul>
+                <li class="logo-container">
+                    <a href="http://127.0.0.1:8000/menu/login" style = "color: white;" class="logout-button">Cerrar Sesión</a>
+                </li>
+                <li><a href="/sitioweb">Principal</a></li>
+                <li><a href="/sitioweb/productos">Lista de Productos</a></li>
+                <li><a href="/diario">DiarioRonero</a></li>
+                <li><a href="/sitioweb/eventos">Eventos</a></li>
+                <li><a href="/sitioweb/afiliacion">Afiliación</a></li>
+                <li><a href="/sitioweb/carrito">Carrito</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenido específico de cada página -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        <strong>ASORONUCAB &copy; 2023 <a href="https://adminlte.io">ASORON</a>.</strong>
+        <span>Descubre la excelencia en cada botella.</span>
+    </footer>
+
+    <!-- Agrega tus scripts JS -->
+</body>
+</html>

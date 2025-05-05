@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <!-- Puedes agregar estilos CSS aquí -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFEBCC;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 80px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            max-width: 250px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #478896;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button {
+            background-color: #478896;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .links {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .links a {
+            color: #478896;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <img class="logo" src="{% static 'images/Logo-ASORON.png' %}" alt="Logo">
+    <div class="title">Inicia Sesión</div>
+
+    <form method="post" action="{% url 'login_view' %}">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="username" placeholder="Usuario">
+        </div>
+        <div class="input-group">
+            <input type="password" name="password" placeholder="Contraseña">
+        </div>
+        <button type="submit" class="button">Acceder</button>
+        <div class="links">
+            <a href="http://127.0.0.1:8000/menu/register">Registrarme</a>
+            <a href="#">Olvidé mi clave</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
