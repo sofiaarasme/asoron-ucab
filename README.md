@@ -41,7 +41,7 @@ El proyecto está desarrollado con **Django** (backend) y **React** (frontend), 
    - Autenticación y permisos basados en roles.
    - Panel de administración.
 2. **Frontend (React)**
-   - Dashboard con gráficos (Recharts).
+   - Dashboard con gráficos.
    - Sitio público de e-commerce.
 3. **Base de Datos**
    - PostgreSQL como motor de datos.
